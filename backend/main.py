@@ -170,7 +170,7 @@ async def extract_places(input_data: TextInput):
 
         # 3. Gemini API 호출
         model = genai.GenerativeModel(
-            model_name='gemini-1.5-flash-latest',
+            model_name='gemini-flash-latest',
             system_instruction=full_system_prompt,
             generation_config={"response_mime_type": "application/json"}
         )
