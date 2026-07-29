@@ -145,12 +145,12 @@ export default function Home() {
         const routePayload = validMarkers.map(m => ({ name: m.title, lat: m.lat, lng: m.lng }));
         
         const [routeRes, transitRes] = await Promise.all([
-          fetch("${process.env.NEXT_PUBLIC_API_URL}/api/get-route", {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-route`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ places: routePayload }),
           }),
-          fetch("${process.env.NEXT_PUBLIC_API_URL}/api/get-transit-route", {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/get-transit-route`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ places: routePayload }),
@@ -250,7 +250,7 @@ export default function Home() {
 
     try {
       const routePayload = validMarkers.map(m => ({ name: m.title, lat: m.lat, lng: m.lng }));
-      const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/optimize-route", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/optimize-route`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ places: routePayload }),
