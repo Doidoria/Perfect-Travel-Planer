@@ -145,12 +145,12 @@ export default function Home() {
         const routePayload = validMarkers.map(m => ({ name: m.title, lat: m.lat, lng: m.lng }));
         
         const [routeRes, transitRes] = await Promise.all([
-          fetch("http://localhost:8000/api/get-route", {
+          fetch("${process.env.NEXT_PUBLIC_API_URL}/api/get-route", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ places: routePayload }),
           }),
-          fetch("http://localhost:8000/api/get-transit-route", {
+          fetch("${process.env.NEXT_PUBLIC_API_URL}/api/get-transit-route", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ places: routePayload }),
@@ -199,7 +199,7 @@ export default function Home() {
     const targetLng = (useCurrentLoc && myLoc) ? myLoc.lng : mapCenter.lng;
 
     try {
-      const response = await fetch("http://localhost:8000/api/extract-places", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/extract-places", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -250,7 +250,7 @@ export default function Home() {
 
     try {
       const routePayload = validMarkers.map(m => ({ name: m.title, lat: m.lat, lng: m.lng }));
-      const response = await fetch("http://localhost:8000/api/optimize-route", {
+      const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/optimize-route", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ places: routePayload }),
@@ -372,7 +372,7 @@ export default function Home() {
         let fetchedImageUrl = "";
         if (finalName !== "내 현재 위치") {
           try {
-            const imgRes = await fetch(`http://localhost:8000/api/place-image?query=${encodeURIComponent(finalName)}`);
+            const imgRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/place-image?query=${encodeURIComponent(finalName)}`);
             if (imgRes.ok) {
               const imgData = await imgRes.json();
               fetchedImageUrl = imgData.image_url || "";
