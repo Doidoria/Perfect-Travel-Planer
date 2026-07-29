@@ -116,6 +116,10 @@ export default function PlaceCard({
                   <span className="text-slate-700 font-bold">{Math.ceil(route.duration_sec / 60)}분</span>
                   <span className="text-slate-300">|</span>
                   <span>{(route.distance_m / 1000).toFixed(1)}km</span>
+                  <span className="text-slate-300">|</span>
+                  <span className="text-blue-600 font-bold">
+                    택시 {((route.taxi_fare && route.taxi_fare > 0) ? route.taxi_fare : (route.distance_m <= 1600 ? 4800 : 4800 + Math.ceil((route.distance_m - 1600) / 131) * 100)).toLocaleString()}원
+                  </span>
                 </>
               )}
               {segmentMode === 'transit' && transitRoute && (
