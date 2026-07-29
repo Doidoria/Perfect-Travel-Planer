@@ -213,7 +213,14 @@ export default function Sidebar({
                       exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden"
                     >
                       <div className="p-5 space-y-2.5 pt-5">
-                        <button onClick={handleKakaoShare} className="w-full flex items-center justify-center gap-2 bg-[#FEE500] text-[#191919] py-3.5 rounded-2xl font-bold text-sm hover:bg-[#FADA0A] transition shadow-sm">
+                        <button onClick={(e) => {
+                            e.preventDefault(); // 라이브러리의 기본 동작을 막음
+                            setTimeout(() => {
+                              handleKakaoShare(); // 0.1초 뒤에 카카오 실행 (에러 우회)
+                            }, 100);
+                          }} 
+                          className="w-full flex items-center justify-center gap-2 bg-[#FEE500] text-[#191919] py-3.5 rounded-2xl font-bold text-sm hover:bg-[#FADA0A] transition shadow-sm"
+                        >
                           <Share2 className="w-4 h-4" /> 카카오톡으로 동선 공유
                         </button>
                         <div className="flex gap-2">
