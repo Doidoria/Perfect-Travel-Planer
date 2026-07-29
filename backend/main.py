@@ -273,7 +273,12 @@ async def get_transit_route(data: RouteRequest):
     
     results = []
     places = data.places
+    
+    headers = {
+        "Referer": "https://perfect-travel-planer.onrender.com" 
+    }
 
+    # client는 여기서 한 번만 엽니다.
     async with httpx.AsyncClient() as client:
         for i in range(len(places) - 1):
             origin = places[i]
@@ -287,9 +292,9 @@ async def get_transit_route(data: RouteRequest):
                 "EY": dest.lat,
                 "OPT": 0 # 0: 최단시간, 1: 최소환승
             }
-            
+
             try:
-                response = await client.get(url, params=params)
+                response = await client.get(url, params=params, headers=headers)
                 route_data = response.json()
                 
                 print(f"[{origin.name} -> {dest.name}] ODsay 응답: ", route_data) 
