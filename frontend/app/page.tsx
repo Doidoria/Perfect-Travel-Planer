@@ -462,24 +462,29 @@ export default function Home() {
       },
     }));
 
-    window.Kakao.Share.sendDefault({
-      objectType: 'list',
-      headerTitle: `🚗 AI 동선 플래너\n⏱️ ${totalDurationMin}분 소요 | 💸 ${totalEstimatedCost.toLocaleString()}원`,
-      headerLink: {
-        mobileWebUrl: 'http://localhost:3000',
-        webUrl: 'http://localhost:3000',
-      },
-      contents: listContents,
-      buttons: [
-        {
-          title: validMarkers.length > 3 ? `앱에서 전체 코스 보기 (총 ${validMarkers.length}곳)` : '자세한 동선 보기',
-          link: {
-            mobileWebUrl: 'http://localhost:3000',
-            webUrl: 'http://localhost:3000',
-          },
+    try { 
+      window.Kakao.Share.sendDefault({
+        objectType: 'list',
+        headerTitle: `🚗 AI 동선 플래너\n⏱️ ${totalDurationMin}분 소요 | 💸 ${totalEstimatedCost.toLocaleString()}원`,
+        headerLink: {
+          mobileWebUrl: 'http://localhost:3000',
+          webUrl: 'http://localhost:3000',
         },
-      ],
-    });
+        contents: listContents,
+        buttons: [
+          {
+            title: validMarkers.length > 3 ? `앱에서 전체 코스 보기 (총 ${validMarkers.length}곳)` : '자세한 동선 보기',
+            link: {
+              mobileWebUrl: 'http://localhost:3000',
+              webUrl: 'http://localhost:3000',
+            },
+          },
+        ],
+      });
+    } catch (error) {
+      // 브라우저나 애드블록이 창을 막아서 에러가 터지면 앱이 죽는 대신 이 알림이 뜹니다!
+      alert("카카오톡 창이 차단되었습니다. 브라우저의 '팝업 차단'이나 '광고 차단 확장 프로그램'을 잠시 해제한 후 다시 시도해 주세요!");
+    }
   };
 
   return (
