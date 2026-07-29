@@ -199,7 +199,7 @@ export default function Home() {
     const targetLng = (useCurrentLoc && myLoc) ? myLoc.lng : mapCenter.lng;
 
     try {
-      const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/api/extract-places", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/extract-places`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 

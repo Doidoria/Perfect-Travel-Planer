@@ -24,7 +24,10 @@ app = FastAPI()
 # 2. CORS 설정 (Next.js 연동)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000", # 로컬 개발용
+        "https://perfect-travel-planer.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
