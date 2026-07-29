@@ -204,7 +204,8 @@ async def extract_places(input_data: TextInput):
         }
         
     except Exception as e:
-        return {"error": str(e), "places": [], "place_details": [], "weather": "서버 에러"}
+        print(f"Weather API Error: {e}")
+        return {"temperature": "-", "condition": "날씨 정보 없음"}
 
 
 # --- [API 엔드포인트 2: 카카오 모빌리티 길찾기] ---
