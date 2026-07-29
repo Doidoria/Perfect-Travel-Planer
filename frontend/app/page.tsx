@@ -459,6 +459,8 @@ export default function Home() {
 
   // 카카오톡 공유 기능 함수
   const handleKakaoShare = () => {
+    const currentDomain = window.location.origin;
+    
     if (!window.Kakao) {
       alert("카카오톡 공유 기능을 불러오지 못했습니다.");
       return;
@@ -466,8 +468,6 @@ export default function Home() {
 
     const validMarkers = markers.filter(m => !m.error);
     if (validMarkers.length === 0) return alert("공유할 동선이 없습니다.");
-
-    const currentDomain = window.location.origin;
 
     const listContents = validMarkers.slice(0, 3).map((m, index) => ({
       title: `${index + 1}. ${m.title}`,

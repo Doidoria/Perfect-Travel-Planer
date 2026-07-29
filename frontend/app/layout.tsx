@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "동선 플래너 🗺️",
+  title: "동선 플래너",
   description: "완벽한 여행 동선 플래너",
 };
 
