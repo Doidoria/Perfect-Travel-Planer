@@ -457,7 +457,7 @@ export default function Home() {
       ? { lat: myLoc.lat, lng: myLoc.lng } 
       : { lat: 37.5665, lng: 126.9780 };
 
-  // 카카오톡 공유 기능 함수 (리치 템플릿 - List 타입 적용)
+  // 카카오톡 공유 기능 함수
   const handleKakaoShare = () => {
     if (!window.Kakao) {
       alert("카카오톡 공유 기능을 불러오지 못했습니다.");
@@ -467,14 +467,15 @@ export default function Home() {
     const validMarkers = markers.filter(m => !m.error);
     if (validMarkers.length === 0) return alert("공유할 동선이 없습니다.");
 
-    // 카카오 리스트 템플릿은 최대 3개까지만 아이템 노출이 가능함
+    const currentDomain = window.location.origin;
+
     const listContents = validMarkers.slice(0, 3).map((m, index) => ({
       title: `${index + 1}. ${m.title}`,
       description: m.category || "방문 장소",
-      imageUrl: m.imageUrl || "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcTKIq5%2Fbtq65G2N147%2FeYn5L6Xz7m9X6X8Z7QZ6K0%2Fimg.png", // 이미지가 없을 때 띄울 기본 플레이스홀더 이미지
+      imageUrl: m.imageUrl || "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcTKIq5%2Fbtq65G2N147%2FeYn5L6Xz7m9X6X8Z7QZ6K0%2Fimg.png",
       link: {
-        mobileWebUrl: 'http://localhost:3000',
-        webUrl: 'http://localhost:3000',
+        mobileWebUrl: currentDomain,
+        webUrl: currentDomain,
       },
     }));
 
@@ -483,22 +484,21 @@ export default function Home() {
         objectType: 'list',
         headerTitle: `🚗 AI 동선 플래너\n⏱️ ${totalDurationMin}분 소요 | 💸 ${totalEstimatedCost.toLocaleString()}원`,
         headerLink: {
-          mobileWebUrl: 'http://localhost:3000',
-          webUrl: 'http://localhost:3000',
+          mobileWebUrl: currentDomain,
+          webUrl: currentDomain,
         },
         contents: listContents,
         buttons: [
           {
             title: validMarkers.length > 3 ? `앱에서 전체 코스 보기 (총 ${validMarkers.length}곳)` : '자세한 동선 보기',
             link: {
-              mobileWebUrl: 'http://localhost:3000',
-              webUrl: 'http://localhost:3000',
+              mobileWebUrl: currentDomain,
+              webUrl: currentDomain,
             },
           },
         ],
       });
     } catch (error) {
-      // 브라우저나 애드블록이 창을 막아서 에러가 터지면 앱이 죽는 대신 이 알림이 뜹니다!
       alert("카카오톡 창이 차단되었습니다. 브라우저의 '팝업 차단'이나 '광고 차단 확장 프로그램'을 잠시 해제한 후 다시 시도해 주세요!");
     }
   };
