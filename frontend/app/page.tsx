@@ -214,6 +214,7 @@ export default function Home() {
       const data = await response.json();
 
       if (data.places && data.places.length > 0) {
+        const uniquePlaces = data.places.filter((place: string, idx: number, arr: string[]) => idx === 0 || place !== arr[idx - 1]);
         let finalPlaces = [...data.places];
         let finalDetails = data.place_details || []; // 백엔드에서 온 비용 데이터 받기
 
@@ -367,6 +368,10 @@ export default function Home() {
       // 검색 결과에 따라 마커 배열에 데이터 추가
       if (searchResult.success) {
         const finalName = pName === "내 현재 위치" ? pName : searchResult.realName;
+
+        if (newMarkers.length > 0 && newMarkers[newMarkers.length - 1].title === finalName) {
+          continue; 
+        }
         
         // 📸 백엔드에 썸네일 이미지 요청 (현재 위치는 제외)
         let fetchedImageUrl = "";
@@ -418,18 +423,29 @@ export default function Home() {
     const mode = fromMarker ? (segmentModes[fromMarker.id] || 'walk') : 'walk';
     
     if (mode === 'walk') {
-      return sum + (r.distance_m / 67) * 60; // 도보(약 67m/분) 초 단위 변환
+      return sum + ((r.distance_m || 0) / 67) * 60; // 도보(약 67m/분) 초 단위 변환
     }
     return sum + (r.duration_sec || 0); // 자동차 시간
-  }, 0) / 60);
+  }, 0) / 60) || 0; // 🚨 맨 뒤에 || 0 을 붙여서 최악의 경우에도 NaN 방어!
   const totalDistanceKm = (routeInfos.reduce((sum, r) => sum + (r.distance_m || 0), 0) / 1000).toFixed(1);
+
+  // 🚕 거리(m) 기반 택시비 자동 계산 함수 (서울 기본요금 4,800원 기준)
+  const getCalculatedTaxiFare = (distanceMeter: number) => {
+    if (!distanceMeter || distanceMeter <= 0) return 0;
+    if (distanceMeter <= 1600) return 4800; // 1.6km 이하는 기본요금 4,800원
+    return 4800 + Math.ceil((distanceMeter - 1600) / 131) * 100; // 131m당 100원 추가
+  };
 
   // 총 예산 계산식 (장소 비용 + 택시/톨비)
   const totalPlacesCost = markers.filter(m => !m.error).reduce((sum, m) => sum + (m.cost || 0), 0);
   const totalTransportCost = routeInfos.reduce((sum, r) => {
     const fromMarker = markers.find(m => m.title === r.from);
     const mode = fromMarker ? (segmentModes[fromMarker.id] || 'walk') : 'walk';
-    if (mode === 'car') return sum + (r.taxi_fare || 0) + (r.toll_fare || 0);
+    if (mode === 'car') {
+      // API에서 넘겨준 택시비가 없거나 0원이라면, 이동 거리로 자동 계산!
+      const taxiFare = (r.taxi_fare && r.taxi_fare > 0) ? r.taxi_fare : getCalculatedTaxiFare(r.distance_m || 0);
+      return sum + taxiFare + (r.toll_fare || 0);
+    }
     return sum;
   }, 0);
   const totalEstimatedCost = totalPlacesCost + totalTransportCost;
